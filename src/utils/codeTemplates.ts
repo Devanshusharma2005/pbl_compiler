@@ -1,4 +1,4 @@
-export const getDefaultCode = (language: string): string => {
+export function getDefaultCode(language: string): string {
   switch (language) {
     case 'py':
       return 'print("Hello from Python!")';
@@ -7,10 +7,10 @@ export const getDefaultCode = (language: string): string => {
       return 'console.log("Hello from JavaScript!");';
     
     case 'ts':
-      return 'const greeting: string = "Hello from TypeScript!";\nconsole.log(greeting);';
+      return 'console.log("Hello from TypeScript!");';
     
-    case 'go':
-      return 'package main\n\nimport "fmt"\n\nfunc main() {\n\tfmt.Println("Hello from Go!")\n}';
+    case 'java':
+      return 'public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello from Java!");\n    }\n}';
     
     case 'cpp':
       return '#include <iostream>\n\nint main() {\n    std::cout << "Hello from C++!" << std::endl;\n    return 0;\n}';
@@ -18,8 +18,8 @@ export const getDefaultCode = (language: string): string => {
     case 'c':
       return '#include <stdio.h>\n\nint main() {\n    printf("Hello from C!\\n");\n    return 0;\n}';
     
-    case 'java':
-      return 'class HelloWorld {\n    public static void main(String[] args) {\n        System.out.println("Hello from Java!");\n    }\n}';
+    case 'go':
+      return 'package main\n\nimport "fmt"\n\nfunc main() {\n    fmt.Println("Hello from Go!")\n}';
     
     case 'rs':
       return 'fn main() {\n    println!("Hello from Rust!");\n}';
@@ -28,9 +28,12 @@ export const getDefaultCode = (language: string): string => {
       return 'fun main() {\n    println("Hello from Kotlin!")\n}';
     
     case 'cs':
-      return 'using System;\n\nclass HelloWorld {\n    static void Main() {\n        Console.WriteLine("Hello from C#!");\n    }\n}';
+      return 'using System;\n\nclass Program {\n    static void Main() {\n        Console.WriteLine("Hello from C#!");\n    }\n}';
+    
+    case 'bac':
+      return 'func main() {\n    print("Hello from BasicCode!\\n");\n}';
     
     default:
       return '// Start coding here';
   }
-};
+}
