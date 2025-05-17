@@ -1,4 +1,4 @@
-import  { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   CommandDialog,
   CommandEmpty,
@@ -6,7 +6,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '../../src/components/ui/command';
+} from './ui/command';
 import { useTheme } from '../contexts/ThemeContext';
 import { languageOptions } from '../utils/languageOptions';
 import { getDefaultCode } from '../utils/codeTemplates';

@@ -5,7 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '../../src/components/ui/dialog';
+} from './ui/dialog';
 import { Keyboard } from 'lucide-react';
 
 const shortcuts = [
