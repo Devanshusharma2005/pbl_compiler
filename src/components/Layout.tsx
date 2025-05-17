@@ -1,12 +1,12 @@
-import  { ReactNode } from 'react';
+import React from 'react';
 import Navbar from './Navbar';
 import Footer from './Footer';
 
 interface LayoutProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
-const Layout = ({ children }: LayoutProps) => {
+const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 text-gray-900 dark:text-gray-100 transition-all duration-300">
       <div className="fixed inset-0 bg-grid-pattern opacity-[0.02] pointer-events-none" />
