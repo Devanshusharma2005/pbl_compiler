@@ -11,18 +11,43 @@ interface CodeEditorProps {
 }
 
 // Map our language identifiers to Monaco identifiers
-const languageMap: Record<string, string> = {
+const languageMap: { [key: string]: string } = {
   'py': 'python',
   'js': 'javascript',
   'ts': 'typescript',
-  'go': 'go',
+  'java': 'java',
   'cpp': 'cpp',
   'c': 'c',
-  'java': 'java',
+  'go': 'go',
   'rs': 'rust',
   'kt': 'kotlin',
-  'cs': 'csharp'
+  'cs': 'csharp',
+  'bac': 'plaintext'
 };
+
+// Register custom themes
+monaco.editor.defineTheme('custom-dark', {
+  base: 'vs-dark',
+  inherit: true,
+  rules: [
+    { token: 'comment', foreground: '6A9955' },
+    { token: 'keyword', foreground: '569CD6' },
+    { token: 'string', foreground: 'CE9178' },
+    { token: 'number', foreground: 'B5CEA8' },
+    { token: 'type', foreground: '4EC9B0' }
+  ],
+  colors: {
+    'editor.background': '#1E1E1E',
+    'editor.foreground': '#D4D4D4',
+    'editor.lineHighlightBackground': '#2F2F2F',
+    'editorLineNumber.foreground': '#858585',
+    'editorLineNumber.activeForeground': '#C6C6C6',
+    'editor.selectionBackground': '#264F78',
+    'editor.inactiveSelectionBackground': '#3A3D41',
+    'editorBracketMatch.background': '#0D3A58',
+    'editorBracketMatch.border': '#888888'
+  }
+});
 
 const CodeEditor: React.FC<CodeEditorProps> = ({ language, value, onChange }) => {
   const editorRef = useRef<HTMLDivElement>(null);
@@ -34,91 +59,51 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ language, value, onChange }) =>
   
   useEffect(() => {
     if (editorRef.current) {
-      // Configure editor theme
-      monaco.editor.defineTheme('custom-dark', {
-        base: 'vs-dark',
-        inherit: true,
-        rules: [
-          { token: 'comment', foreground: '6A9955' },
-          { token: 'keyword', foreground: 'C586C0' },
-          { token: 'string', foreground: 'CE9178' },
-          { token: 'number', foreground: 'B5CEA8' },
-          { token: 'operator', foreground: 'D4D4D4' }
-        ],
-        colors: {
-          'editor.background': '#1E1E1E',
-          'editor.foreground': '#D4D4D4',
-          'editor.lineHighlightBackground': '#2F2F2F',
-          'editorCursor.foreground': '#FFFFFF',
-          'editor.selectionBackground': '#264F78',
-          'editor.inactiveSelectionBackground': '#3A3D41'
-        }
-      });
-
-      // Configure editor theme for light mode
-      monaco.editor.defineTheme('custom-light', {
-        base: 'vs',
-        inherit: true,
-        rules: [
-          { token: 'comment', foreground: '008000' },
-          { token: 'keyword', foreground: '0000FF' },
-          { token: 'string', foreground: 'A31515' },
-          { token: 'number', foreground: '098658' },
-          { token: 'operator', foreground: '000000' }
-        ],
-        colors: {
-          'editor.background': '#FFFFFF',
-          'editor.foreground': '#000000',
-          'editor.lineHighlightBackground': '#F7F7F7',
-          'editorCursor.foreground': '#000000',
-          'editor.selectionBackground': '#ADD6FF',
-          'editor.inactiveSelectionBackground': '#E5EBF1'
-        }
-      });
-
-      // Initialize Monaco editor
+      // Set up Monaco editor
       monacoEditorRef.current = monaco.editor.create(editorRef.current, {
         value,
         language: languageMap[language] || 'plaintext',
-        theme: theme === 'dark' ? 'custom-dark' : 'custom-light',
+        theme: 'custom-dark',
         automaticLayout: true,
         minimap: { 
-          enabled: true,
-          scale: 0.75,
-          renderCharacters: false,
-          maxColumn: 80,
-          showSlider: 'mouseover'
+          enabled: false
         },
         scrollBeyondLastLine: false,
-        fontSize: window.innerWidth < 640 ? 13 : 14,
-        fontFamily: '"Fira Code", "JetBrains Mono", "Menlo", "Monaco", "Courier New", monospace',
+        fontSize: 14,
+        fontFamily: '"Fira Code", monospace',
         fontLigatures: true,
-        lineNumbers: window.innerWidth < 640 ? 'off' : 'on',
-        roundedSelection: true,
+        lineNumbers: 'on',
+        roundedSelection: false,
         selectOnLineNumbers: true,
         cursorStyle: 'line',
         cursorBlinking: 'smooth',
         smoothScrolling: true,
         contextmenu: true,
         mouseWheelZoom: true,
-        lineHeight: 1.5,
+        lineHeight: 21,
         padding: { 
-          top: window.innerWidth < 640 ? 8 : 10, 
-          bottom: window.innerWidth < 640 ? 8 : 10 
+          top: 16,
+          bottom: 16
         },
         scrollbar: {
-          verticalScrollbarSize: window.innerWidth < 640 ? 8 : 10,
-          horizontalScrollbarSize: window.innerWidth < 640 ? 8 : 10,
-          verticalSliderSize: window.innerWidth < 640 ? 8 : 10,
-          horizontalSliderSize: window.innerWidth < 640 ? 8 : 10,
-          useShadows: true
+          useShadows: false,
+          verticalScrollbarSize: 10,
+          horizontalScrollbarSize: 10
         },
+        overviewRulerLanes: 0,
+        lineDecorationsWidth: 0,
         renderLineHighlight: 'all',
-        occurrencesHighlight: true,
-        renderIndentGuides: window.innerWidth < 640 ? false : true,
         matchBrackets: 'always',
-        renderWhitespace: window.innerWidth < 640 ? 'none' : 'selection',
-        wordWrap: window.innerWidth < 640 ? 'on' : 'off'
+        renderWhitespace: 'selection',
+        wordWrap: 'off',
+        fixedOverflowWidgets: true,
+        tabSize: 4,
+        insertSpaces: true,
+        guides: {
+          indentation: true,
+          highlightActiveIndentation: true,
+          bracketPairs: true
+        }
       });
 
       // Add change event listener
@@ -128,32 +113,12 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ language, value, onChange }) =>
         updateCounts(newValue);
       });
 
-      // Handle window resize
-      const handleResize = () => {
-        if (monacoEditorRef.current) {
-          monacoEditorRef.current.updateOptions({
-            fontSize: window.innerWidth < 640 ? 13 : 14,
-            lineNumbers: window.innerWidth < 640 ? 'off' : 'on',
-            padding: { 
-              top: window.innerWidth < 640 ? 8 : 10, 
-              bottom: window.innerWidth < 640 ? 8 : 10 
-            },
-            renderIndentGuides: window.innerWidth < 640 ? false : true,
-            renderWhitespace: window.innerWidth < 640 ? 'none' : 'selection',
-            wordWrap: window.innerWidth < 640 ? 'on' : 'off'
-          });
-        }
-      };
-
-      window.addEventListener('resize', handleResize);
-
       // Initial counts update
       updateCounts(value);
 
       return () => {
         changeDisposable.dispose();
         monacoEditorRef.current?.dispose();
-        window.removeEventListener('resize', handleResize);
       };
     }
   }, []);
@@ -172,15 +137,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ language, value, onChange }) =>
       }
     }
   }, [language]);
-
-  // Update theme when it changes
-  useEffect(() => {
-    if (monacoEditorRef.current) {
-      monacoEditorRef.current.updateOptions({
-        theme: theme === 'dark' ? 'custom-dark' : 'custom-light'
-      });
-    }
-  }, [theme]);
 
   // Update value when it changes from external source
   useEffect(() => {
@@ -201,7 +157,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ language, value, onChange }) =>
   };
 
   return (
-    <div className="relative h-[calc(100vh-24rem)] sm:h-[500px] w-full group">
+    <div className="h-full w-full relative bg-[#1E1E1E]">
       <div className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
         <motion.button
           whileHover={{ scale: 1.05 }}
